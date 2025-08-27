@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Premium Currency Converter | Priyanshu Chauhan</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #0e9488;
+      --primary-light: #3db8ab;
+      --primary-dark: #067368;
+      --secondary: #8a63d9;
+      --accent: #ff7d50;
+      --light: #f8fafc;
+      --dark: #1e293b;
+      --grey: #e2e8f0;
+      --text: #334155;
+      --success: #10b981;
+      --border-radius: 16px;
+      --box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+      --transition: all 0.3s ease;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #dbeafe 0%, #f0f9ff 50%, #f0fdfa 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding: 0;
+      color: var(--text);
+    }
+
+    .header {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: white;
+      padding: 25px 5%;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      position: relative;
+    }
+
+    .header-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .header h1 {
+      font-size: 2.8rem;
+      font-weight: 700;
+      margin-bottom: 5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+    }
+
+    .header p {
+      opacity: 0.9;
+      font-size: 1.1rem;
+      max-width: 600px;
+    }
+
+    .author {
+      position: absolute;
+      right: 30px;
+      bottom: 15px;
+      font-size: 0.9rem;
+      opacity: 0.8;
+    }
+
+    .main-container {
+      display: flex;
+      flex: 1;
+      padding: 40px 5%;
+      gap: 40px;
+      max-width: 1600px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .converter-section {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .converter-card {
+      background: white;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      padding: 35px;
+      flex: 1;
+    }
+
+    .stats-section {
+      width: 320px;
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+    }
+
+    .stats-card {
+      background: white;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      padding: 25px;
+    }
+
+    .stats-card h3 {
+      color: var(--primary);
+      margin-bottom: 20px;
+      font-size: 1.3rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .stat-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--grey);
+    }
+
+    .stat-item:last-child {
+      border-bottom: none;
+    }
+
+    .stat-value {
+      font-weight: 600;
+      color: var(--primary);
+    }
+
+    .input-group {
+      margin-bottom: 25px;
+      position: relative;
+    }
+
+    .input-group label {
+      display: block;
+      margin-bottom: 12px;
+      font-weight: 600;
+      color: var(--dark);
+      font-size: 1.1rem;
+    }
+
+    .amount-input {
+      position: relative;
+    }
+
+    .amount-input input {
+      width: 100%;
+      padding: 20px 25px;
+      border: 2px solid var(--grey);
+      border-radius: var(--border-radius);
+      font-size: 1.3rem;
+      font-weight: 600;
+      transition: var(--transition);
+      color: var(--primary-dark);
+    }
+
+    .amount-input input:focus {
+      border-color: var(--primary);
+      outline: none;
+      box-shadow: 0 0 0 4px rgba(14, 148, 136, 0.2);
+    }
+
+    .currency-selectors {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      margin: 30px 0;
+    }
+
+    .currency-box {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .currency-box label {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: var(--dark);
+    }
+
+    .select-wrapper {
+      position: relative;
+    }
+
+    .select-wrapper::after {
+      content: "▼";
+      font-size: 14px;
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--primary);
+      pointer-events: none;
+    }
+
+    .currency-select {
+      width: 100%;
+      padding: 18px;
+      border: 2px solid var(--grey);
+      border-radius: var(--border-radius);
+      appearance: none;
+      font-size: 1.1rem;
+      font-weight: 600;
+      background: white;
+      cursor: pointer;
+      transition: var(--transition);
+      color: var(--primary-dark);
+    }
+
+    .currency-select:focus {
+      border-color: var(--primary);
+      outline: none;
+      box-shadow: 0 0 0 4px rgba(14, 148, 136, 0.2);
+    }
+
+    .swap-btn {
+      background: var(--accent);
+      color: white;
+      border: none;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: var(--transition);
+      margin-top: 38px;
+      box-shadow: 0 6px 20px rgba(255, 125, 80, 0.4);
+      font-size: 1.4rem;
+    }
+
+    .swap-btn:hover {
+      background: #ff6b3c;
+      transform: rotate(180deg);
+    }
+
+    .convert-btn {
+      width: 100%;
+      padding: 22px;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: white;
+      border: none;
+      border-radius: var(--border-radius);
+      font-size: 1.3rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      box-shadow: 0 6px 20px rgba(14, 148, 136, 0.3);
+      letter-spacing: 0.5px;
+    }
+
+    .convert-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(14, 148, 136, 0.4);
+    }
+
+    .convert-btn:active {
+      transform: translateY(0);
+    }
+
+    .result-section {
+      background: var(--grey);
+      border-radius: var(--border-radius);
+      padding: 30px;
+      margin-top: 35px;
+      display: none;
+    }
+
+    .result-section.show {
+      display: block;
+      animation: fadeIn 0.5s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .result-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 25px;
+    }
+
+    .result-header h2 {
+      color: var(--dark);
+      font-size: 1.6rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .result-content {
+      text-align: center;
+      padding: 25px 0;
+    }
+
+    .result-amount {
+      font-size: 3rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin: 15px 0;
+    }
+
+    .result-text {
+      color: var(--text);
+      font-size: 1.2rem;
+      opacity: 0.9;
+    }
+
+    .history-section {
+      margin-top: 40px;
+    }
+
+    .history-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .history-header h3 {
+      color: var(--dark);
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .clear-history {
+      background: none;
+      border: none;
+      color: var(--text);
+      cursor: pointer;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: var(--transition);
+      padding: 8px 16px;
+      border-radius: 30px;
+      background: var(--grey);
+    }
+
+    .clear-history:hover {
+      color: var(--accent);
+      background: #ffe6e0;
+    }
+
+    .history-table-container {
+      background: white;
+      border-radius: var(--border-radius);
+      overflow: hidden;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    .history-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .history-table th {
+      background: var(--primary-light);
+      color: white;
+      padding: 16px 20px;
+      text-align: left;
+      font-size: 1rem;
+      font-weight: 600;
+      position: sticky;
+      top: 0;
+    }
+
+    .history-table td {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--grey);
+      font-size: 1rem;
+    }
+
+    .history-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .history-table tr {
+      transition: var(--transition);
+    }
+
+    .history-table tr:hover {
+      background: #f9f9f9;
+    }
+
+    .no-history {
+      text-align: center;
+      padding: 40px;
+      color: var(--text);
+      font-style: italic;
+      opacity: 0.7;
+    }
+
+    .footer {
+      background: var(--dark);
+      color: white;
+      text-align: center;
+      padding: 20px;
+      margin-top: auto;
+    }
+
+    .footer p {
+      opacity: 0.8;
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 1200px) {
+      .main-container {
+        flex-direction: column;
+      }
+      
+      .stats-section {
+        width: 100%;
+        flex-direction: row;
+        flex-wrap: wrap;
+      }
+      
+      .stats-card {
+        flex: 1;
+        min-width: 280px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .header h1 {
+        font-size: 2.2rem;
+      }
+      
+      .currency-selectors {
+        flex-direction: column;
+        gap: 20px;
+      }
+      
+      .swap-btn {
+        margin: 0;
+        align-self: center;
+        transform: rotate(90deg);
+      }
+      
+      .swap-btn:hover {
+        transform: rotate(270deg);
+      }
+      
+      .result-amount {
+        font-size: 2.2rem;
+      }
+      
+      .stats-section {
+        flex-direction: column;
+      }
+      
+      .author {
+        position: static;
+        margin-top: 15px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .header {
+        padding: 20px;
+      }
+      
+      .header h1 {
+        font-size: 1.8rem;
+      }
+      
+      .converter-card {
+        padding: 25px;
+      }
+      
+      .result-amount {
+        font-size: 1.8rem;
+      }
+      
+      .history-table th, 
+      .history-table td {
+        padding: 12px 15px;
+      }
+    }
+
+    /* Animation for numbers */
+    @keyframes countUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .result-amount {
+      animation: countUp 0.5s ease-out;
+    }
+
+    /* Currency flags styling */
+    .currency-flag {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-right: 10px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+      vertical-align: middle;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="header-content">
+      <h1><i class="fas fa-exchange-alt"></i> Premium Currency Converter</h1>
+      <p>Convert between global currencies with real-time exchange rates</p>
+      <div class="author">Created by Priyanshu Chauhan</div>
+    </div>
+  </div>
+
+  <div class="main-container">
+    <div class="converter-section">
+      <div class="converter-card">
+        <div class="input-group">
+          <label for="amount">Amount</label>
+          <div class="amount-input">
+            <input type="number" id="amount" placeholder="Enter amount" min="0" step="0.01">
+          </div>
+        </div>
+
+        <div class="currency-selectors">
+          <div class="currency-box">
+            <label for="from">From Currency</label>
+            <div class="select-wrapper">
+              <select id="from" class="currency-select">
+                <option value="USD">USD - US Dollar</option>
+                <option value="EUR">EUR - Euro</option>
+                <option value="GBP">GBP - British Pound</option>
+                <option value="JPY">JPY - Japanese Yen</option>
+                <option value="CAD">CAD - Canadian Dollar</option>
+                <option value="AUD">AUD - Australian Dollar</option>
+                <option value="CHF">CHF - Swiss Franc</option>
+                <option value="CNY">CNY - Chinese Yuan</option>
+                <option value="INR" selected>INR - Indian Rupee</option>
+              </select>
+            </div>
+          </div>
+
+          <button class="swap-btn" id="swap">
+            <i class="fas fa-exchange-alt"></i>
+          </button>
+
+          <div class="currency-box">
+            <label for="to">To Currency</label>
+            <div class="select-wrapper">
+              <select id="to" class="currency-select">
+                <option value="USD" selected>USD - US Dollar</option>
+                <option value="EUR">EUR - Euro</option>
+                <option value="GBP">GBP - British Pound</option>
+                <option value="JPY">JPY - Japanese Yen</option>
+                <option value="CAD">CAD - Canadian Dollar</option>
+                <option value="AUD">AUD - Australian Dollar</option>
+                <option value="CHF">CHF - Swiss Franc</option>
+                <option value="CNY">CNY - Chinese Yuan</option>
+                <option value="INR">INR - Indian Rupee</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <button class="convert-btn" id="convert">
+          <i class="fas fa-calculator"></i> Convert Currency
+        </button>
+
+        <div class="result-section" id="result-section">
+          <div class="result-header">
+            <h2><i class="fas fa-chart-line"></i> Conversion Result</h2>
+            <span id="conversion-date"></span>
+          </div>
+          <div class="result-content">
+            <div class="result-amount" id="result-amount"></div>
+            <p class="result-text" id="result-text"></p>
+          </div>
+        </div>
+
+        <div class="history-section">
+          <div class="history-header">
+            <h3><i class="fas fa-history"></i> Conversion History</h3>
+            <button class="clear-history" id="clear-history">
+              <i class="fas fa-trash-alt"></i> Clear History
+            </button>
+          </div>
+          
+          <div class="history-table-container">
+            <table class="history-table">
+              <thead>
+                <tr>
+                  <th>Amount</th>
+                  <th>From</th>
+                  <th>To</th>
+                  <th>Result</th>
+                  <th>Date</th>
+                </tr>
+              </thead>
+              <tbody id="history-body">
+                <!-- History will be populated here -->
+              </tbody>
+            </table>
+            <div class="no-history" id="no-history">No conversion history yet</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stats-section">
+      <div class="stats-card">
+        <h3><i class="fas fa-info-circle"></i> Converter Info</h3>
+        <div class="stat-item">
+          <span>Supported Currencies</span>
+          <span class="stat-value">9</span>
+        </div>
+        <div class="stat-item">
+          <span>Conversions Today</span>
+          <span class="stat-value" id="conversions-today">0</span>
+        </div>
+        <div class="stat-item">
+          <span>Total Conversions</span>
+          <span class="stat-value" id="total-conversions">0</span>
+        </div>
+      </div>
+
+      <div class="stats-card">
+        <h3><i class="fas fa-fire"></i> Popular Conversions</h3>
+        <div class="stat-item">
+          <span>USD to EUR</span>
+          <span class="stat-value">0.92</span>
+        </div>
+        <div class="stat-item">
+          <span>EUR to GBP</span>
+          <span class="stat-value">0.86</span>
+        </div>
+        <div class="stat-item">
+          <span>INR to USD</span>
+          <span class="stat-value">0.012</span>
+        </div>
+        <div class="stat-item">
+          <span>USD to JPY</span>
+          <span class="stat-value">147.65</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <p>© 2023 Premium Currency Converter | Designed and Developed by Priyanshu Chauhan</p>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+  <script>
+    // Enhanced exchange rates (more currencies added)
+    const rates = {
+      "USD": { "USD": 1, "EUR": 0.92, "GBP": 0.79, "JPY": 147.65, "CAD": 1.36, "AUD": 1.54, "CHF": 0.88, "CNY": 7.18, "INR": 83.00 },
+      "EUR": { "USD": 1.09, "EUR": 1, "GBP": 0.86, "JPY": 160.87, "CAD": 1.48, "AUD": 1.67, "CHF": 0.96, "CNY": 7.82, "INR": 90.50 },
+      "GBP": { "USD": 1.27, "EUR": 1.16, "GBP": 1, "JPY": 186.56, "CAD": 1.72, "AUD": 1.95, "CHF": 1.12, "CNY": 9.10, "INR": 105.00 },
+      "JPY": { "USD": 0.0068, "EUR": 0.0062, "GBP": 0.0054, "JPY": 1, "CAD": 0.0092, "AUD": 0.0104, "CHF": 0.0060, "CNY": 0.049, "INR": 0.56 },
+      "CAD": { "USD": 0.74, "EUR": 0.68, "GBP": 0.58, "JPY": 108.70, "CAD": 1, "AUD": 1.13, "CHF": 0.65, "CNY": 5.28, "INR": 61.00 },
+      "AUD": { "USD": 0.65, "EUR": 0.60, "GBP": 0.51, "JPY": 96.00, "CAD": 0.88, "AUD": 1, "CHF": 0.57, "CNY": 4.66, "INR": 54.00 },
+      "CHF": { "USD": 1.14, "EUR": 1.04, "GBP": 0.89, "JPY": 167.50, "CAD": 1.54, "AUD": 1.75, "CHF": 1, "CNY": 8.15, "INR": 94.50 },
+      "CNY": { "USD": 0.14, "EUR": 0.13, "GBP": 0.11, "JPY": 20.45, "CAD": 0.19, "AUD": 0.21, "CHF": 0.12, "CNY": 1, "INR": 11.60 },
+      "INR": { "USD": 0.012, "EUR": 0.011, "GBP": 0.0095, "JPY": 1.79, "CAD": 0.016, "AUD": 0.019, "CHF": 0.011, "CNY": 0.086, "INR": 1 }
+    };
+
+    let history = JSON.parse(localStorage.getItem('conversionHistory')) || [];
+    let totalConversions = localStorage.getItem('totalConversions') || 0;
+    let conversionsToday = localStorage.getItem('conversionsToday') || 0;
+    let lastConversionDate = localStorage.getItem('lastConversionDate');
+
+    document.addEventListener('DOMContentLoaded', function() {
+      // Check if it's a new day
+      const today = new Date().toDateString();
+      if (lastConversionDate !== today) {
+        conversionsToday = 0;
+        localStorage.setItem('lastConversionDate', today);
+      }
+      
+      // Update stats
+      document.getElementById('conversions-today').textContent = conversionsToday;
+      document.getElementById('total-conversions').textContent = totalConversions;
+      
+      // Load history if available
+      updateHistory();
+      
+      // Set up event listeners
+      document.getElementById('convert').addEventListener('click', convert);
+      document.getElementById('swap').addEventListener('click', swapCurrencies);
+      document.getElementById('clear-history').addEventListener('click', clearHistory);
+      
+      // Allow Enter key to trigger conversion
+      document.getElementById('amount').addEventListener('keyup', function(event) {
+        if (event.key === 'Enter') {
+          convert();
+        }
+      });
+    });
+
+    function convert() {
+      const amountInput = document.getElementById('amount');
+      const fromSelect = document.getElementById('from');
+      const toSelect = document.getElementById('to');
+      const resultSection = document.getElementById('result-section');
+      const resultAmount = document.getElementById('result-amount');
+      const resultText = document.getElementById('result-text');
+      const conversionDate = document.getElementById('conversion-date');
+      
+      const amount = parseFloat(amountInput.value);
+      const from = fromSelect.value;
+      const to = toSelect.value;
+
+      // Input validation
+      if (isNaN(amount) || amount <= 0) {
+        alert("Please enter a valid amount greater than 0");
+        amountInput.focus();
+        return;
+      }
+
+      // Perform conversion
+      const result = (amount * rates[from][to]).toFixed(2);
+      
+      // Format numbers with commas
+      const formattedAmount = formatNumber(amount);
+      const formattedResult = formatNumber(result);
+      
+      // Display result
+      resultAmount.textContent = `${formattedResult} ${to}`;
+      resultText.textContent = `${formattedAmount} ${from} equals`;
+      
+      // Show conversion date
+      const now = new Date();
+      conversionDate.textContent = now.toLocaleDateString() + ' ' + now.toLocaleTimeString();
+      
+      // Show result section with animation
+      resultSection.classList.add('show');
+      
+      // Update stats
+      totalConversions++;
+      conversionsToday++;
+      localStorage.setItem('totalConversions', totalConversions);
+      localStorage.setItem('conversionsToday', conversionsToday);
+      document.getElementById('conversions-today').textContent = conversionsToday;
+      document.getElementById('total-conversions').textContent = totalConversions;
+      
+      // Add to history
+      const historyItem = {
+        amount: formattedAmount,
+        from,
+        to,
+        result: formattedResult,
+        date: now.toLocaleString()
+      };
+      
+      history.unshift(historyItem);
+      if (history.length > 10) history.pop(); // Keep only last 10 conversions
+      
+      // Save to localStorage
+      localStorage.setItem('conversionHistory', JSON.stringify(history));
+      
+      // Update history display
+      updateHistory();
+    }
+
+    function swapCurrencies() {
+      const fromSelect = document.getElementById('from');
+      const toSelect = document.getElementById('to');
+      
+      // Swap values
+      const temp = fromSelect.value;
+      fromSelect.value = toSelect.value;
+      toSelect.value = temp;
+    }
+
+    function updateHistory() {
+      const historyBody = document.getElementById('history-body');
+      const noHistory = document.getElementById('no-history');
+      
+      // Clear current history display
+      historyBody.innerHTML = '';
+      
+      if (history.length === 0) {
+        noHistory.style.display = 'block';
+        return;
+      }
+      
+      noHistory.style.display = 'none';
+      
+      // Add history items to table
+      history.forEach(item => {
+        const row = document.createElement('tr');
+        
+        row.innerHTML = `
+          <td>${item.amount}</td>
+          <td>${item.from}</td>
+          <td>${item.to}</td>
+          <td>${item.result}</td>
+          <td>${item.date}</td>
+        `;
+        
+        historyBody.appendChild(row);
+      });
+    }
+
+    function clearHistory() {
+      if (history.length === 0) return;
+      
+      if (confirm("Are you sure you want to clear your conversion history?")) {
+        history = [];
+        localStorage.removeItem('conversionHistory');
+        updateHistory();
+      }
+    }
+
+    function formatNumber(num) {
+      return new Intl.NumberFormat('en-IN', { 
+        maximumFractionDigits: 2,
+        minimumFractionDigits: 2 
+      }).format(num);
+    }
+  </script>
+</body>
+</html>
